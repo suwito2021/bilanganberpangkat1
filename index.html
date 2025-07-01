@@ -169,7 +169,8 @@
             <div id="intro-quiz" class="space-y-4">
                 <!-- Quiz questions will be dynamically loaded here -->
             </div>
-            <div id="intro-feedback" class="feedback-box hidden"></div>
+            <!-- Feedback box for intro quiz (no longer used for individual questions) -->
+            <!-- <div id="intro-feedback" class="feedback-box hidden"></div> -->
         </section>
 
         <!-- 2. Menghitung Nilai Pangkat (Halaman 23-28) -->
@@ -196,7 +197,8 @@
             <div id="calculate-quiz" class="space-y-4">
                 <!-- Quiz questions will be dynamically loaded here -->
             </div>
-            <div id="calculate-feedback" class="feedback-box hidden"></div>
+            <!-- Feedback box for calculate quiz (no longer used for individual questions) -->
+            <!-- <div id="calculate-feedback" class="feedback-box hidden"></div> -->
         </section>
 
         <!-- 3. Sifat-Sifat Pangkat (Halaman 29-48) -->
@@ -222,7 +224,8 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 1:</h4>
                 <div id="property1-quiz" class="space-y-3"></div>
-                <div id="property1-feedback" class="feedback-box hidden"></div>
+                <!-- Feedback box for property1 quiz -->
+                <!-- <div id="property1-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 2: Pembagian Bilangan Berpangkat -->
@@ -243,7 +246,8 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 2:</h4>
                 <div id="property2-quiz" class="space-y-3"></div>
-                <div id="property2-feedback" class="feedback-box hidden"></div>
+                <!-- Feedback box for property2 quiz -->
+                <!-- <div id="property2-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 3: Perpangkatan Bilangan Berpangkat -->
@@ -264,7 +268,8 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 3:</h4>
                 <div id="property3-quiz" class="space-y-3"></div>
-                <div id="property3-feedback" class="feedback-box hidden"></div>
+                <!-- Feedback box for property3 quiz -->
+                <!-- <div id="property3-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 4: Perpangkatan dari Perkalian Dua Bilangan -->
@@ -285,7 +290,8 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 4:</h4>
                 <div id="property4-quiz" class="space-y-3"></div>
-                <div id="property4-feedback" class="feedback-box hidden"></div>
+                <!-- Feedback box for property4 quiz -->
+                <!-- <div id="property4-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 5: Perpangkatan dari Pembagian Dua Bilangan -->
@@ -306,7 +312,8 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 5:</h4>
                 <div id="property5-quiz" class="space-y-3"></div>
-                <div id="property5-feedback" class="feedback-box hidden"></div>
+                <!-- Feedback box for property5 quiz -->
+                <!-- <div id="property5-feedback" class="feedback-box hidden"></div> -->
             </div>
         </section>
 
@@ -333,22 +340,22 @@
                 <div class="bg-blue-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-blue-800 mb-3">Pertumbuhan Populasi</h3>
                     <p class="mb-2">Populasi bakteri atau hewan seringkali tumbuh secara eksponensial. Jika populasi berlipat ganda setiap jam, maka setelah t jam, populasinya akan menjadi P<sub>0</sub> x 2<sup>t</sup>, di mana P<sub>0</sub> adalah populasi awal.</p>
-                    <p class="text-center mt-4"></p>
+                    <p class="text-center mt-4">[Gambar Bakteri tumbuh secara eksponensial]</p>
                 </div>
                 <div class="bg-green-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-green-800 mb-3">Bunga Majemuk</h3>
                     <p class="mb-2">Saat menabung di bank dengan bunga majemuk, jumlah uang Anda akan tumbuh secara eksponensial. Rumusnya adalah A = P(1 + r/n)<sup>nt</sup>.</p>
-                    <p class="text-center mt-4"></p>
+                    <p class="text-center mt-4">[Gambar Uang tumbuh dengan bunga majemuk]</p>
                 </div>
                 <div class="bg-purple-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-purple-800 mb-3">Ukuran File Digital</h3>
                     <p class="mb-2">Ukuran memori komputer (Kilobyte, Megabyte, Gigabyte) menggunakan basis 2. Misalnya, 1 Kilobyte = 2<sup>10</sup> byte.</p>
-                    <p class="text-center mt-4"></p>
+                    <p class="text-center mt-4">[Gambar Satuan memori komputer]</p>
                 </div>
                 <div class="bg-yellow-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-yellow-800 mb-3">Skala Richter Gempa Bumi</h3>
                     <p class="mb-2">Skala Richter adalah skala logaritmik, yang berarti setiap kenaikan satu angka menunjukkan peningkatan kekuatan gempa bumi sebesar 10 kali lipat secara eksponensial.</p>
-                    <p class="text-center mt-4"></p>
+                    <p class="text-center mt-4">[Gambar Skala Richter gempa bumi]</p>
                 </div>
             </div>
         </section>
@@ -439,11 +446,16 @@
             }
         ];
 
-        function loadQuiz(questions, containerId, feedbackId) {
+        // Modified loadQuiz to create unique IDs for each question's container and feedback
+        function loadQuiz(questions, containerId) { // Removed feedbackId as it's now per question
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Clear previous questions
             questions.forEach((q, qIndex) => {
                 const questionDiv = document.createElement('div');
+                const questionUniqueId = `question-${containerId}-${qIndex}`;
+                const feedbackUniqueId = `feedback-${containerId}-${qIndex}`;
+
+                questionDiv.id = questionUniqueId; // Assign unique ID to question container
                 questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
                 questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
 
@@ -454,22 +466,32 @@
                     const optionButton = document.createElement('button');
                     optionButton.classList.add('quiz-option', 'text-left');
                     optionButton.innerHTML = option;
-                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackId, `q${qIndex}-${containerId}`);
+                    // Pass unique IDs for the question container and its feedback box
+                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackUniqueId, questionUniqueId);
                     optionsDiv.appendChild(optionButton);
                 });
                 questionDiv.appendChild(optionsDiv);
+
+                // Add a unique feedback box for each question
+                const feedbackBox = document.createElement('div');
+                feedbackBox.id = feedbackUniqueId;
+                feedbackBox.classList.add('feedback-box', 'hidden');
+                questionDiv.appendChild(feedbackBox);
+
                 container.appendChild(questionDiv);
             });
         }
 
-        function checkAnswer(selectedButton, correctAnswer, feedbackId, questionId) {
-            const options = document.querySelectorAll(`#${questionId.split('-')[1]} .quiz-option`); // Get all options for this question
+        // Modified checkAnswer to target specific question's options and feedback
+        function checkAnswer(selectedButton, correctAnswer, feedbackBoxId, questionContainerId) {
+            // Get all options within the specific question's container
+            const options = document.querySelectorAll(`#${questionContainerId} .quiz-option`);
             options.forEach(btn => {
                 btn.classList.remove('correct', 'incorrect');
-                btn.disabled = true; // Disable all options after selection
+                btn.disabled = true; // Disable all options for THIS specific question
             });
 
-            const feedbackBox = document.getElementById(feedbackId);
+            const feedbackBox = document.getElementById(feedbackBoxId);
             feedbackBox.classList.remove('hidden', 'feedback-correct', 'feedback-incorrect');
 
             if (selectedButton.innerHTML === correctAnswer) {
@@ -478,7 +500,7 @@
                 feedbackBox.innerHTML = 'Benar! 🎉';
             } else {
                 selectedButton.classList.add('incorrect');
-                // Find and highlight the correct answer
+                // Find and highlight the correct answer within this question's options
                 options.forEach(btn => {
                     if (btn.innerHTML === correctAnswer) {
                         btn.classList.add('correct');
@@ -609,31 +631,11 @@
             ]
         };
 
+        // Modified loadPropertyQuiz to use the updated loadQuiz logic
         function loadPropertyQuiz(propertyKey) {
             const questions = propertyQuizzes[propertyKey];
             const containerId = `${propertyKey}-quiz`;
-            const feedbackId = `${propertyKey}-feedback`;
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-
-            questions.forEach((q, qIndex) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
-                questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
-
-                const optionsDiv = document.createElement('div');
-                optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
-
-                q.options.forEach((option, oIndex) => {
-                    const optionButton = document.createElement('button');
-                    optionButton.classList.add('quiz-option', 'text-left');
-                    optionButton.innerHTML = option;
-                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackId, `${propertyKey}-q${qIndex}`);
-                    optionsDiv.appendChild(optionButton);
-                });
-                questionDiv.appendChild(optionsDiv);
-                container.appendChild(questionDiv);
-            });
+            loadQuiz(questions, containerId); // Use the general loadQuiz function
         }
 
         // --- Section 4: Latihan Soal ---
@@ -782,8 +784,9 @@
 
         // Initialize quizzes on page load
         window.onload = function() {
-            loadQuiz(introQuizQuestions, 'intro-quiz', 'intro-feedback');
-            loadQuiz(calculateQuizQuestions, 'calculate-quiz', 'calculate-feedback');
+            // Updated loadQuiz calls to pass only containerId
+            loadQuiz(introQuizQuestions, 'intro-quiz');
+            loadQuiz(calculateQuizQuestions, 'calculate-quiz');
             loadPropertyQuiz('property1');
             loadPropertyQuiz('property2');
             loadPropertyQuiz('property3');

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Angka Berpangkat!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #334155; /* Dark slate gray text */
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 960px;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Style for interactive elements */
+        .interactive-box {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .interactive-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        .btn-primary {
+            background-color: #2563eb; /* Blue-700 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* Blue-800 */
+        }
+        .btn-secondary {
+            background-color: #64748b; /* Slate-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #475569; /* Slate-600 */
+        }
+        .quiz-option {
+            background-color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .quiz-option:hover {
+            background-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border: 2px solid #34d399; /* Green-400 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border: 2px solid #ef4444; /* Red-500 */
+        }
+        .feedback-box {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        .feedback-correct {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-800 */
+        }
+        .feedback-incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            color: #991b1b; /* Red-800 */
+        }
+        .section-header {
+            background-color: #3b82f6; /* Blue-500 */
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .math-formula {
+            font-family: 'Times New Roman', serif; /* Or a specific math font */
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e3a8a; /* Darker blue for formulas */
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="container mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-blue-700 mb-4">✨ Petualangan Angka Berpangkat! ✨</h1>
+            <p class="text-xl text-gray-600">Jelajahi dunia bilangan berpangkat dan kuasai rahasianya!</p>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <nav class="flex flex-wrap justify-center gap-4 mb-12">
+            <button onclick="scrollToSection('intro')" class="btn-primary">Pengenalan</button>
+            <button onclick="scrollToSection('calculate')" class="btn-primary">Menghitung Nilai</button>
+            <button onclick="scrollToSection('properties')" class="btn-primary">Sifat-Sifat Pangkat</button>
+            <button onclick="scrollToSection('practice')" class="btn-primary">Latihan Soal</button>
+            <button onclick="scrollToSection('application')" class="btn-primary">Aplikasi</button>
+            <button onclick="scrollToSection('summary')" class="btn-primary">Rangkuman & Kuis</button>
+        </nav>
+
+        <!-- Main Content Sections -->
+
+        <!-- 1. Pengenalan Bilangan Berpangkat (Halaman 21-22) -->
+        <section id="intro" class="card">
+            <h2 class="section-header">1. Pengenalan Bilangan Berpangkat</h2>
+            <p class="text-lg mb-4">Bilangan berpangkat adalah cara singkat untuk menulis perkalian berulang suatu bilangan dengan dirinya sendiri.</p>
+            <div class="bg-blue-50 p-6 rounded-lg mb-6 shadow-inner">
+                <p class="text-xl font-semibold mb-3">Contoh:</p>
+                <p class="text-2xl font-bold text-center mb-4">
+                    2 x 2 x 2 = 2<sup>3</sup>
+                </p>
+                <div class="flex justify-center items-center gap-4 text-center">
+                    <div class="p-3 bg-blue-200 rounded-md cursor-pointer hover:bg-blue-300 transition-colors" onclick="showDefinition('basis')">
+                        <span class="text-3xl font-bold text-blue-800">2</span> <br> <span class="text-sm text-blue-700">Basis</span>
+                    </div>
+                    <span class="text-4xl font-light text-gray-400">^</span>
+                    <div class="p-3 bg-blue-200 rounded-md cursor-pointer hover:bg-blue-300 transition-colors" onclick="showDefinition('eksponen')">
+                        <span class="text-3xl font-bold text-blue-800">3</span> <br> <span class="text-sm text-blue-700">Eksponen</span>
+                    </div>
+                </div>
+                <div id="definition-popup" class="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-md hidden"></div>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4">Kuis Cepat: Identifikasi!</h3>
+            <div id="intro-quiz" class="space-y-4">
+                <!-- Quiz questions will be dynamically loaded here -->
+            </div>
+            <div id="intro-feedback" class="feedback-box hidden"></div>
+        </section>
+
+        <!-- 2. Menghitung Nilai Pangkat (Halaman 23-28) -->
+        <section id="calculate" class="card">
+            <h2 class="section-header">2. Menghitung Nilai Pangkat</h2>
+            <p class="text-lg mb-4">Untuk menghitung nilai bilangan berpangkat, kita mengalikan basis sebanyak eksponen.</p>
+
+            <div class="bg-green-50 p-6 rounded-lg mb-6 shadow-inner">
+                <h3 class="text-2xl font-semibold mb-4">Kalkulator Pangkat Sederhana</h3>
+                <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
+                    <input type="number" id="basisInput" placeholder="Basis (misal: 5)" class="p-3 border border-gray-300 rounded-md w-full md:w-1/3 focus:ring-blue-500 focus:border-blue-500">
+                    <span class="text-2xl font-bold">^</span>
+                    <input type="number" id="eksponenInput" placeholder="Eksponen (misal: 2)" class="p-3 border border-gray-300 rounded-md w-full md:w-1/3 focus:ring-blue-500 focus:border-blue-500">
+                    <button onclick="calculateExponent()" class="btn-primary w-full md:w-auto">Hitung!</button>
+                </div>
+                <div id="calculationResult" class="mt-4 p-4 bg-green-100 border border-green-300 rounded-md hidden">
+                    <p class="font-semibold text-green-800 mb-2">Hasil Perhitungan:</p>
+                    <p id="calculationSteps" class="text-green-700"></p>
+                    <p id="finalResult" class="text-2xl font-bold text-green-900 mt-2"></p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4">Latihan Mandiri</h3>
+            <div id="calculate-quiz" class="space-y-4">
+                <!-- Quiz questions will be dynamically loaded here -->
+            </div>
+            <div id="calculate-feedback" class="feedback-box hidden"></div>
+        </section>
+
+        <!-- 3. Sifat-Sifat Pangkat (Halaman 29-48) -->
+        <section id="properties" class="card">
+            <h2 class="section-header">3. Sifat-Sifat Bilangan Berpangkat</h2>
+            <p class="text-lg mb-6">Bilangan berpangkat memiliki beberapa sifat yang memudahkan perhitungan. Mari kita pelajari satu per satu!</p>
+
+            <!-- Sifat 1: Perkalian Bilangan Berpangkat -->
+            <div class="bg-purple-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-purple-800 mb-4">Sifat 1: Perkalian Bilangan Berpangkat</h3>
+                <p class="text-lg mb-3">Jika basisnya sama, eksponennya dijumlahkan saat dikalikan.</p>
+                <p class="math-formula text-center mb-4">a<sup>m</sup> x a<sup>n</sup> = a<sup>m+n</sup></p>
+                <div class="bg-white p-4 rounded-md border border-purple-200 mb-4">
+                    <p class="font-semibold mb-2">Contoh Interaktif:</p>
+                    <p class="text-xl text-center">
+                        2<sup>3</sup> x 2<sup>2</sup> = ?
+                        <button onclick="revealPropertyExample(this, 'sifat1-example')" class="ml-3 btn-secondary text-sm">Lihat Langkah</button>
+                    </p>
+                    <div id="sifat1-example" class="mt-2 text-purple-700 hidden">
+                        2<sup>3</sup> x 2<sup>2</sup> = (2 x 2 x 2) x (2 x 2) = 2 x 2 x 2 x 2 x 2 = 2<sup>5</sup> <br>
+                        Menggunakan sifat: 2<sup>3+2</sup> = 2<sup>5</sup>.
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 1:</h4>
+                <div id="property1-quiz" class="space-y-3"></div>
+                <div id="property1-feedback" class="feedback-box hidden"></div>
+            </div>
+
+            <!-- Sifat 2: Pembagian Bilangan Berpangkat -->
+            <div class="bg-yellow-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-yellow-800 mb-4">Sifat 2: Pembagian Bilangan Berpangkat</h3>
+                <p class="text-lg mb-3">Jika basisnya sama, eksponennya dikurangkan saat dibagi.</p>
+                <p class="math-formula text-center mb-4">a<sup>m</sup> / a<sup>n</sup> = a<sup>m-n</sup></p>
+                <div class="bg-white p-4 rounded-md border border-yellow-200 mb-4">
+                    <p class="font-semibold mb-2">Contoh Interaktif:</p>
+                    <p class="text-xl text-center">
+                        3<sup>5</sup> / 3<sup>2</sup> = ?
+                        <button onclick="revealPropertyExample(this, 'sifat2-example')" class="ml-3 btn-secondary text-sm">Lihat Langkah</button>
+                    </p>
+                    <div id="sifat2-example" class="mt-2 text-yellow-700 hidden">
+                        3<sup>5</sup> / 3<sup>2</sup> = (3 x 3 x 3 x 3 x 3) / (3 x 3) = 3 x 3 x 3 = 3<sup>3</sup> <br>
+                        Menggunakan sifat: 3<sup>5-2</sup> = 3<sup>3</sup>.
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 2:</h4>
+                <div id="property2-quiz" class="space-y-3"></div>
+                <div id="property2-feedback" class="feedback-box hidden"></div>
+            </div>
+
+            <!-- Sifat 3: Perpangkatan Bilangan Berpangkat -->
+            <div class="bg-red-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-red-800 mb-4">Sifat 3: Perpangkatan Bilangan Berpangkat</h3>
+                <p class="text-lg mb-3">Jika bilangan berpangkat dipangkatkan lagi, eksponennya dikalikan.</p>
+                <p class="math-formula text-center mb-4">(a<sup>m</sup>)<sup>n</sup> = a<sup>m x n</sup></p>
+                <div class="bg-white p-4 rounded-md border border-red-200 mb-4">
+                    <p class="font-semibold mb-2">Contoh Interaktif:</p>
+                    <p class="text-xl text-center">
+                        (2<sup>3</sup>)<sup>2</sup> = ?
+                        <button onclick="revealPropertyExample(this, 'sifat3-example')" class="ml-3 btn-secondary text-sm">Lihat Langkah</button>
+                    </p>
+                    <div id="sifat3-example" class="mt-2 text-red-700 hidden">
+                        (2<sup>3</sup>)<sup>2</sup> = (2 x 2 x 2)<sup>2</sup> = (2 x 2 x 2) x (2 x 2 x 2) = 2<sup>6</sup> <br>
+                        Menggunakan sifat: 2<sup>3 x 2</sup> = 2<sup>6</sup>.
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 3:</h4>
+                <div id="property3-quiz" class="space-y-3"></div>
+                <div id="property3-feedback" class="feedback-box hidden"></div>
+            </div>
+
+            <!-- Sifat 4: Perpangkatan dari Perkalian Dua Bilangan -->
+            <div class="bg-teal-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-teal-800 mb-4">Sifat 4: Perpangkatan dari Perkalian Dua Bilangan</h3>
+                <p class="text-lg mb-3">Perkalian dua bilangan yang dipangkatkan sama dengan masing-masing bilangan dipangkatkan, lalu hasilnya dikalikan.</p>
+                <p class="math-formula text-center mb-4">(ab)<sup>m</sup> = a<sup>m</sup> b<sup>m</sup></p>
+                <div class="bg-white p-4 rounded-md border border-teal-200 mb-4">
+                    <p class="font-semibold mb-2">Contoh Interaktif:</p>
+                    <p class="text-xl text-center">
+                        (2 x 3)<sup>2</sup> = ?
+                        <button onclick="revealPropertyExample(this, 'sifat4-example')" class="ml-3 btn-secondary text-sm">Lihat Langkah</button>
+                    </p>
+                    <div id="sifat4-example" class="mt-2 text-teal-700 hidden">
+                        (2 x 3)<sup>2</sup> = 6<sup>2</sup> = 36 <br>
+                        Menggunakan sifat: 2<sup>2</sup> x 3<sup>2</sup> = 4 x 9 = 36.
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 4:</h4>
+                <div id="property4-quiz" class="space-y-3"></div>
+                <div id="property4-feedback" class="feedback-box hidden"></div>
+            </div>
+
+            <!-- Sifat 5: Perpangkatan dari Pembagian Dua Bilangan -->
+            <div class="bg-orange-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-orange-800 mb-4">Sifat 5: Perpangkatan dari Pembagian Dua Bilangan</h3>
+                <p class="text-lg mb-3">Pembagian dua bilangan yang dipangkatkan sama dengan masing-masing bilangan dipangkatkan, lalu hasilnya dibagi.</p>
+                <p class="math-formula text-center mb-4">(a/b)<sup>m</sup> = a<sup>m</sup> / b<sup>m</sup></p>
+                <div class="bg-white p-4 rounded-md border border-orange-200 mb-4">
+                    <p class="font-semibold mb-2">Contoh Interaktif:</p>
+                    <p class="text-xl text-center">
+                        (6 / 2)<sup>3</sup> = ?
+                        <button onclick="revealPropertyExample(this, 'sifat5-example')" class="ml-3 btn-secondary text-sm">Lihat Langkah</button>
+                    </p>
+                    <div id="sifat5-example" class="mt-2 text-orange-700 hidden">
+                        (6 / 2)<sup>3</sup> = 3<sup>3</sup> = 27 <br>
+                        Menggunakan sifat: 6<sup>3</sup> / 2<sup>3</sup> = 216 / 8 = 27.
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 5:</h4>
+                <div id="property5-quiz" class="space-y-3"></div>
+                <div id="property5-feedback" class="feedback-box hidden"></div>
+            </div>
+        </section>
+
+        <!-- 4. Latihan Soal (Halaman 49-60) -->
+        <section id="practice" class="card">
+            <h2 class="section-header">4. Latihan Soal</h2>
+            <p class="text-lg mb-6">Mari kita uji pemahamanmu dengan berbagai soal latihan!</p>
+            <div id="practice-quiz-container" class="space-y-6">
+                <!-- Practice questions will be dynamically loaded here -->
+            </div>
+            <div id="practice-score" class="mt-6 text-xl font-bold text-center hidden"></div>
+            <div class="flex justify-center mt-6">
+                <button onclick="submitPracticeQuiz()" class="btn-primary">Periksa Jawaban</button>
+                <button onclick="resetPracticeQuiz()" class="btn-secondary ml-4">Ulangi Latihan</button>
+            </div>
+        </section>
+
+        <!-- 5. Aplikasi dalam Kehidupan (Halaman 61-64) -->
+        <section id="application" class="card">
+            <h2 class="section-header">5. Aplikasi Bilangan Berpangkat dalam Kehidupan</h2>
+            <p class="text-lg mb-4">Bilangan berpangkat tidak hanya ada di buku pelajaran, tapi juga banyak digunakan dalam kehidupan sehari-hari dan ilmu pengetahuan!</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-6 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-3">Pertumbuhan Populasi</h3>
+                    <p class="mb-2">Populasi bakteri atau hewan seringkali tumbuh secara eksponensial. Jika populasi berlipat ganda setiap jam, maka setelah t jam, populasinya akan menjadi P<sub>0</sub> x 2<sup>t</sup>, di mana P<sub>0</sub> adalah populasi awal.</p>
+                    <p class="text-center mt-4"></p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-green-800 mb-3">Bunga Majemuk</h3>
+                    <p class="mb-2">Saat menabung di bank dengan bunga majemuk, jumlah uang Anda akan tumbuh secara eksponensial. Rumusnya adalah A = P(1 + r/n)<sup>nt</sup>.</p>
+                    <p class="text-center mt-4"></p>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-3">Ukuran File Digital</h3>
+                    <p class="mb-2">Ukuran memori komputer (Kilobyte, Megabyte, Gigabyte) menggunakan basis 2. Misalnya, 1 Kilobyte = 2<sup>10</sup> byte.</p>
+                    <p class="text-center mt-4"></p>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-3">Skala Richter Gempa Bumi</h3>
+                    <p class="mb-2">Skala Richter adalah skala logaritmik, yang berarti setiap kenaikan satu angka menunjukkan peningkatan kekuatan gempa bumi sebesar 10 kali lipat secara eksponensial.</p>
+                    <p class="text-center mt-4"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Rangkuman & Kuis Akhir -->
+        <section id="summary" class="card">
+            <h2 class="section-header">6. Rangkuman & Kuis Akhir</h2>
+            <p class="text-lg mb-6">Selamat! Anda telah menyelesaikan petualangan ini. Mari kita rangkum apa yang telah kita pelajari dan uji kembali pemahaman Anda.</p>
+
+            <div class="bg-indigo-50 p-6 rounded-lg mb-8 shadow-inner">
+                <h3 class="text-2xl font-semibold text-indigo-800 mb-4">Rangkuman Sifat-Sifat Pangkat</h3>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li>a<sup>m</sup> x a<sup>n</sup> = a<sup>m+n</sup> (Perkalian)</li>
+                    <li>a<sup>m</sup> / a<sup>n</sup> = a<sup>m-n</sup> (Pembagian)</li>
+                    <li>(a<sup>m</sup>)<sup>n</sup> = a<sup>m x n</sup> (Perpangkatan Pangkat)</li>
+                    <li>(ab)<sup>m</sup> = a<sup>m</sup> b<sup>m</sup> (Perpangkatan Perkalian)</li>
+                    <li>(a/b)<sup>m</sup> = a<sup>m</sup> / b<sup>m</sup> (Perpangkatan Pembagian)</li>
+                </ul>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4">Kuis Akhir</h3>
+            <div id="final-quiz-container" class="space-y-6">
+                <!-- Final quiz questions will be dynamically loaded here -->
+            </div>
+            <div id="final-score" class="mt-6 text-xl font-bold text-center hidden"></div>
+            <div class="flex justify-center mt-6">
+                <button onclick="submitFinalQuiz()" class="btn-primary">Selesaikan Kuis</button>
+                <button onclick="resetFinalQuiz()" class="btn-secondary ml-4">Ulangi Kuis</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-12 p-4 border-t border-gray-200">
+            Dibuat dengan semangat untuk pembelajaran matematika yang menyenangkan!
+        </footer>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="messageBoxContent" class="text-lg font-semibold mb-4"></p>
+            <button onclick="hideMessageBox()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to scroll to a section
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Custom Message Box Functions
+        function showMessageBox(message) {
+            document.getElementById('messageBoxContent').textContent = message;
+            document.getElementById('messageBox').classList.remove('hidden');
+        }
+
+        function hideMessageBox() {
+            document.getElementById('messageBox').classList.add('hidden');
+        }
+
+        // --- Section 1: Pengenalan Bilangan Berpangkat ---
+        function showDefinition(type) {
+            const popup = document.getElementById('definition-popup');
+            popup.classList.remove('hidden');
+            if (type === 'basis') {
+                popup.innerHTML = '<p class="font-bold">Basis:</p> Angka yang dikalikan berulang kali.';
+            } else if (type === 'eksponen') {
+                popup.innerHTML = '<p class="font-bold">Eksponen:</p> Berapa kali basis dikalikan dengan dirinya sendiri.';
+            }
+        }
+
+        const introQuizQuestions = [
+            {
+                question: "Pada 5<sup>4</sup>, angka 5 disebut...",
+                options: ["Eksponen", "Basis", "Hasil", "Faktor"],
+                answer: "Basis"
+            },
+            {
+                question: "Pada 7<sup>3</sup>, angka 3 disebut...",
+                options: ["Basis", "Faktor", "Eksponen", "Perkalian"],
+                answer: "Eksponen"
+            },
+            {
+                question: "Bentuk perkalian berulang dari 3<sup>5</sup> adalah...",
+                options: ["3 x 5", "5 x 5 x 5", "3 x 3 x 3 x 3 x 3", "3+3+3+3+3"],
+                answer: "3 x 3 x 3 x 3 x 3"
+            }
+        ];
+
+        function loadQuiz(questions, containerId, feedbackId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Clear previous questions
+            questions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
+                questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
+
+                q.options.forEach((option, oIndex) => {
+                    const optionButton = document.createElement('button');
+                    optionButton.classList.add('quiz-option', 'text-left');
+                    optionButton.innerHTML = option;
+                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackId, `q${qIndex}-${containerId}`);
+                    optionsDiv.appendChild(optionButton);
+                });
+                questionDiv.appendChild(optionsDiv);
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(selectedButton, correctAnswer, feedbackId, questionId) {
+            const options = document.querySelectorAll(`#${questionId.split('-')[1]} .quiz-option`); // Get all options for this question
+            options.forEach(btn => {
+                btn.classList.remove('correct', 'incorrect');
+                btn.disabled = true; // Disable all options after selection
+            });
+
+            const feedbackBox = document.getElementById(feedbackId);
+            feedbackBox.classList.remove('hidden', 'feedback-correct', 'feedback-incorrect');
+
+            if (selectedButton.innerHTML === correctAnswer) {
+                selectedButton.classList.add('correct');
+                feedbackBox.classList.add('feedback-correct');
+                feedbackBox.innerHTML = 'Benar! 🎉';
+            } else {
+                selectedButton.classList.add('incorrect');
+                // Find and highlight the correct answer
+                options.forEach(btn => {
+                    if (btn.innerHTML === correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+                feedbackBox.classList.add('feedback-incorrect');
+                feedbackBox.innerHTML = `Salah. Jawaban yang benar adalah: <span class="font-bold">${correctAnswer}</span>`;
+            }
+        }
+
+        // --- Section 2: Menghitung Nilai Pangkat ---
+        function calculateExponent() {
+            const basis = parseFloat(document.getElementById('basisInput').value);
+            const eksponen = parseInt(document.getElementById('eksponenInput').value);
+            const resultDiv = document.getElementById('calculationResult');
+            const stepsP = document.getElementById('calculationSteps');
+            const finalResultP = document.getElementById('finalResult');
+
+            if (isNaN(basis) || isNaN(eksponen)) {
+                resultDiv.classList.remove('hidden', 'bg-green-100');
+                resultDiv.classList.add('bg-red-100');
+                stepsP.innerHTML = 'Mohon masukkan angka yang valid untuk basis dan eksponen.';
+                finalResultP.innerHTML = '';
+                return;
+            }
+
+            resultDiv.classList.remove('hidden', 'bg-red-100');
+            resultDiv.classList.add('bg-green-100');
+
+            let steps = `${basis}`;
+            let result = basis;
+            if (eksponen === 0) {
+                result = 1;
+                steps = `${basis}<sup>0</sup> = 1 (setiap bilangan pangkat 0 hasilnya 1, kecuali 0<sup>0</sup>)`;
+            } else if (eksponen < 0) {
+                // Handle negative exponents: a^-n = 1/a^n
+                let positiveEksponen = Math.abs(eksponen);
+                let tempResult = 1;
+                let tempSteps = '1';
+                for (let i = 0; i < positiveEksponen; i++) {
+                    tempResult *= basis;
+                    tempSteps += ` / ${basis}`;
+                }
+                result = 1 / tempResult;
+                steps = `1 / (${basis}<sup>${positiveEksponen}</sup>) = ${tempSteps}`;
+            } else {
+                for (let i = 1; i < eksponen; i++) {
+                    steps += ` x ${basis}`;
+                    result *= basis;
+                }
+            }
+
+            stepsP.innerHTML = `${basis}<sup>${eksponen}</sup> = ${steps}`;
+            finalResultP.innerHTML = `Hasil: ${result}`;
+        }
+
+        const calculateQuizQuestions = [
+            {
+                question: "Berapakah hasil dari 4<sup>3</sup>?",
+                options: ["12", "16", "64", "81"],
+                answer: "64"
+            },
+            {
+                question: "Berapakah hasil dari (-2)<sup>4</sup>?",
+                options: ["-16", "16", "-8", "8"],
+                answer: "16"
+            },
+            {
+                question: "Berapakah hasil dari (1/2)<sup>3</sup>?",
+                options: ["1/2", "1/4", "1/6", "1/8"],
+                answer: "1/8"
+            }
+        ];
+
+        // --- Section 3: Sifat-Sifat Pangkat ---
+        function revealPropertyExample(button, exampleId) {
+            const exampleDiv = document.getElementById(exampleId);
+            // Add a null check for robustness
+            if (!exampleDiv) {
+                console.error(`Element with ID '${exampleId}' not found.`);
+                return;
+            }
+
+            if (exampleDiv.classList.contains('hidden')) {
+                exampleDiv.classList.remove('hidden');
+                button.textContent = 'Sembunyikan Langkah';
+            } else {
+                exampleDiv.classList.add('hidden');
+                button.textContent = 'Lihat Langkah';
+            }
+        }
+
+        const propertyQuizzes = {
+            property1: [ // Perkalian
+                {
+                    question: "Sederhanakan 5<sup>2</sup> x 5<sup>3</sup>",
+                    options: ["5<sup>5</sup>", "5<sup>6</sup>", "25<sup>5</sup>", "10<sup>5</sup>"],
+                    answer: "5<sup>5</sup>"
+                }
+            ],
+            property2: [ // Pembagian
+                {
+                    question: "Sederhanakan 7<sup>6</sup> / 7<sup>2</sup>",
+                    options: ["7<sup>8</sup>", "7<sup>4</sup>", "7<sup>3</sup>", "49<sup>4</sup>"],
+                    answer: "7<sup>4</sup>"
+                }
+            ],
+            property3: [ // Perpangkatan Pangkat
+                {
+                    question: "Sederhanakan (3<sup>2</sup>)<sup>4</sup>",
+                    options: ["3<sup>6</sup>", "3<sup>8</sup>", "3<sup>16</sup>", "9<sup>4</sup>"],
+                    answer: "3<sup>8</sup>"
+                }
+            ],
+            property4: [ // Perpangkatan Perkalian
+                {
+                    question: "Sederhanakan (2 x 5)<sup>3</sup>",
+                    options: ["2<sup>3</sup> x 5<sup>3</sup>", "10<sup>3</sup>", "2<sup>3</sup> + 5<sup>3</sup>", "A dan B benar"],
+                    answer: "A dan B benar" // Both are correct forms
+                }
+            ],
+            property5: [ // Perpangkatan Pembagian
+                {
+                    question: "Sederhanakan (10 / 2)<sup>4</sup>",
+                    options: ["10<sup>4</sup> / 2<sup>4</sup>", "5<sup>4</sup>", "10<sup>4</sup> - 2<sup>4</sup>", "A dan B benar"],
+                    answer: "A dan B benar" // Both are correct forms
+                }
+            ]
+        };
+
+        function loadPropertyQuiz(propertyKey) {
+            const questions = propertyQuizzes[propertyKey];
+            const containerId = `${propertyKey}-quiz`;
+            const feedbackId = `${propertyKey}-feedback`;
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            questions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
+                questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
+
+                q.options.forEach((option, oIndex) => {
+                    const optionButton = document.createElement('button');
+                    optionButton.classList.add('quiz-option', 'text-left');
+                    optionButton.innerHTML = option;
+                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackId, `${propertyKey}-q${qIndex}`);
+                    optionsDiv.appendChild(optionButton);
+                });
+                questionDiv.appendChild(optionsDiv);
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // --- Section 4: Latihan Soal ---
+        const practiceQuizQuestions = [
+            {
+                question: "Sederhanakan (x<sup>3</sup> y<sup>2</sup>)<sup>4</sup>",
+                options: ["x<sup>7</sup> y<sup>6</sup>", "x<sup>12</sup> y<sup>8</sup>", "x<sup>3</sup> y<sup>8</sup>", "x<sup>12</sup> y<sup>2</sup>"],
+                answer: "x<sup>12</sup> y<sup>8</sup>"
+            },
+            {
+                question: "Hasil dari (2<sup>2</sup> x 3)<sup>2</sup> adalah...",
+                options: ["2<sup>4</sup> x 3<sup>2</sup>", "2<sup>2</sup> x 3<sup>2</sup>", "6<sup>2</sup>", "36"],
+                answer: "2<sup>4</sup> x 3<sup>2</sup>" // Or 144, but the simplified form is often expected
+            },
+            {
+                question: "Jika 2<sup>x</sup> = 32, maka nilai x adalah...",
+                options: ["3", "4", "5", "6"],
+                answer: "5"
+            },
+            {
+                question: "Bentuk sederhana dari (a<sup>5</sup> b<sup>3</sup>) / (a<sup>2</sup> b) adalah...",
+                options: ["a<sup>3</sup> b<sup>2</sup>", "a<sup>7</sup> b<sup>4</sup>", "a<sup>10</sup> b<sup>3</sup>", "a<sup>2</sup> b<sup>3</sup>"],
+                answer: "a<sup>3</sup> b<sup>2</sup>"
+            },
+            {
+                question: "Hasil dari ((-3)<sup>2</sup>)<sup>3</sup> adalah...",
+                options: ["-729", "729", "-27", "27"],
+                answer: "729"
+            }
+        ];
+
+        function loadPracticeQuiz() {
+            const container = document.getElementById('practice-quiz-container');
+            container.innerHTML = '';
+            practiceQuizQuestions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
+                questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
+                q.options.forEach((option, oIndex) => {
+                    const inputId = `practice-q${qIndex}-option${oIndex}`;
+                    optionsDiv.innerHTML += `
+                        <label for="${inputId}" class="quiz-option flex items-center">
+                            <input type="radio" id="${inputId}" name="practice-q${qIndex}" value="${option}" class="mr-2">
+                            ${option}
+                        </label>
+                    `;
+                });
+                questionDiv.appendChild(optionsDiv);
+                container.appendChild(questionDiv);
+            });
+            document.getElementById('practice-score').classList.add('hidden');
+        }
+
+        function submitPracticeQuiz() {
+            let score = 0;
+            practiceQuizQuestions.forEach((q, qIndex) => {
+                const selectedOption = document.querySelector(`input[name="practice-q${qIndex}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+            const scoreDiv = document.getElementById('practice-score');
+            scoreDiv.classList.remove('hidden');
+            scoreDiv.innerHTML = `Skor Anda: ${score} dari ${practiceQuizQuestions.length}`;
+            showMessageBox(`Anda mendapatkan ${score} dari ${practiceQuizQuestions.length} soal benar!`);
+        }
+
+        function resetPracticeQuiz() {
+            loadPracticeQuiz();
+        }
+
+        // --- Section 6: Kuis Akhir ---
+        const finalQuizQuestions = [
+            {
+                question: "Sederhanakan (2<sup>4</sup> x 2<sup>3</sup>) / 2<sup>5</sup>",
+                options: ["2<sup>2</sup>", "2<sup>4</sup>", "2<sup>7</sup>", "2<sup>12</sup>"],
+                answer: "2<sup>2</sup>"
+            },
+            {
+                question: "Jika (x<sup>2</sup>)<sup>3</sup> = 64, maka nilai x yang mungkin adalah...",
+                options: ["2", "4", "8", "16"],
+                answer: "2" // (x^6 = 64 -> x=2)
+            },
+            {
+                question: "Bentuk paling sederhana dari (3<sup>2</sup> a<sup>3</sup> b<sup>4</sup>) / (3 a b<sup>2</sup>) adalah...",
+                options: ["3 a<sup>2</sup> b<sup>2</sup>", "3 a<sup>3</sup> b<sup>2</sup>", "9 a<sup>2</sup> b<sup>2</sup>", "3 a<sup>2</sup> b<sup>3</sup>"],
+                answer: "3 a<sup>2</sup> b<sup>2</sup>"
+            },
+            {
+                question: "Berapakah hasil dari ((1/3)<sup>-2</sup>)?",
+                options: ["1/9", "-9", "9", "1/3"],
+                answer: "9" // (1/3)^-2 = 3^2 = 9
+            },
+            {
+                question: "Sebuah virus membelah diri menjadi 2 setiap 30 menit. Jika awalnya ada 10 virus, berapa banyak virus setelah 2 jam?",
+                options: ["40", "80", "160", "320"],
+                answer: "160" // 2 hours = 4 * 30 mins. 10 * 2^4 = 10 * 16 = 160
+            }
+        ];
+
+        function loadFinalQuiz() {
+            const container = document.getElementById('final-quiz-container');
+            container.innerHTML = '';
+            finalQuizQuestions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
+                questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
+                q.options.forEach((option, oIndex) => {
+                    const inputId = `final-q${qIndex}-option${oIndex}`;
+                    optionsDiv.innerHTML += `
+                        <label for="${inputId}" class="quiz-option flex items-center">
+                            <input type="radio" id="${inputId}" name="final-q${qIndex}" value="${option}" class="mr-2">
+                            ${option}
+                        </label>
+                    `;
+                });
+                questionDiv.appendChild(optionsDiv);
+                container.appendChild(questionDiv);
+            });
+            document.getElementById('final-score').classList.add('hidden');
+        }
+
+        function submitFinalQuiz() {
+            let score = 0;
+            finalQuizQuestions.forEach((q, qIndex) => {
+                const selectedOption = document.querySelector(`input[name="final-q${qIndex}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+            const scoreDiv = document.getElementById('final-score');
+            scoreDiv.classList.remove('hidden');
+            scoreDiv.innerHTML = `Skor Akhir Anda: ${score} dari ${finalQuizQuestions.length}`;
+            showMessageBox(`Selamat! Anda mendapatkan ${score} dari ${finalQuizQuestions.length} soal benar pada kuis akhir!`);
+        }
+
+        function resetFinalQuiz() {
+            loadFinalQuiz();
+        }
+
+        // Initialize quizzes on page load
+        window.onload = function() {
+            loadQuiz(introQuizQuestions, 'intro-quiz', 'intro-feedback');
+            loadQuiz(calculateQuizQuestions, 'calculate-quiz', 'calculate-feedback');
+            loadPropertyQuiz('property1');
+            loadPropertyQuiz('property2');
+            loadPropertyQuiz('property3');
+            loadPropertyQuiz('property4');
+            loadPropertyQuiz('property5');
+            loadPracticeQuiz();
+            loadFinalQuiz();
+        };
+    </script>
+</body>
+</html>

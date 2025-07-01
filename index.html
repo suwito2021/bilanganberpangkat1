@@ -122,18 +122,107 @@
             font-weight: bold;
             color: #1e3a8a; /* Darker blue for formulas */
         }
+
+        /* Hamburger menu specific styles */
+        .hamburger-menu {
+            display: none; /* Hidden by default, shown on small screens */
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            z-index: 60; /* Above messageBox */
+        }
+        .hamburger-bar {
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb; /* Blue-700 */
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Styles for when the menu is open */
+        .hamburger-menu.open .hamburger-bar:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+        .hamburger-menu.open .hamburger-bar:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-menu.open .hamburger-bar:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 40;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-nav-menu {
+            background-color: #f0f4f8;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767px) { /* For screens smaller than md (768px in Tailwind) */
+            .hamburger-menu {
+                display: flex; /* Show hamburger on small screens */
+                position: absolute;
+                top: 2.5rem; /* Adjust as needed */
+                right: 2.5rem; /* Adjust as needed */
+            }
+            .desktop-nav {
+                display: none; /* Hide desktop nav on small screens */
+            }
+            .mobile-nav-overlay.open {
+                display: flex; /* Show overlay when menu is open */
+            }
+        }
+
+        @media (min-width: 768px) { /* For md screens and larger */
+            .hamburger-menu {
+                display: none; /* Hide hamburger on larger screens */
+            }
+            .desktop-nav {
+                display: flex; /* Show desktop nav on larger screens */
+            }
+            .mobile-nav-overlay {
+                display: none !important; /* Ensure overlay is hidden on large screens */
+            }
+        }
     </style>
 </head>
 <body class="p-6">
-    <div class="container mx-auto">
+    <div class="container mx-auto relative">
         <!-- Header Section -->
         <header class="text-center mb-12">
             <h1 class="text-5xl font-extrabold text-blue-700 mb-4">✨ Petualangan Angka Berpangkat! ✨</h1>
             <p class="text-xl text-gray-600">Jelajahi dunia bilangan berpangkat dan kuasai rahasianya!</p>
         </header>
 
-        <!-- Navigation Buttons -->
-        <nav class="flex flex-wrap justify-center gap-4 mb-12">
+        <!-- Hamburger Menu Icon (for mobile) -->
+        <div class="hamburger-menu" id="hamburgerIcon" onclick="toggleMobileMenu()">
+            <div class="hamburger-bar"></div>
+            <div class="hamburger-bar"></div>
+            <div class="hamburger-bar"></div>
+        </div>
+
+        <!-- Desktop Navigation Buttons -->
+        <nav class="flex flex-wrap justify-center gap-4 mb-12 desktop-nav">
             <button onclick="scrollToSection('intro')" class="btn-primary">Pengenalan</button>
             <button onclick="scrollToSection('calculate')" class="btn-primary">Menghitung Nilai</button>
             <button onclick="scrollToSection('properties')" class="btn-primary">Sifat-Sifat Pangkat</button>
@@ -141,6 +230,19 @@
             <button onclick="scrollToSection('application')" class="btn-primary">Aplikasi</button>
             <button onclick="scrollToSection('summary')" class="btn-primary">Rangkuman & Kuis</button>
         </nav>
+
+        <!-- Mobile Navigation Overlay (hidden by default) -->
+        <div id="mobileNavOverlay" class="mobile-nav-overlay">
+            <div class="mobile-nav-menu">
+                <button onclick="scrollToSectionAndCloseMenu('intro')" class="btn-primary">Pengenalan</button>
+                <button onclick="scrollToSectionAndCloseMenu('calculate')" class="btn-primary">Menghitung Nilai</button>
+                <button onclick="scrollToSectionAndCloseMenu('properties')" class="btn-primary">Sifat-Sifat Pangkat</button>
+                <button onclick="scrollToSectionAndCloseMenu('practice')" class="btn-primary">Latihan Soal</button>
+                <button onclick="scrollToSectionAndCloseMenu('application')" class="btn-primary">Aplikasi</button>
+                <button onclick="scrollToSectionAndCloseMenu('summary')" class="btn-primary">Rangkuman & Kuis</button>
+                <button onclick="toggleMobileMenu()" class="btn-secondary mt-4">Tutup</button>
+            </div>
+        </div>
 
         <!-- Main Content Sections -->
 
@@ -312,7 +414,7 @@
             </div>
             <div id="practice-score" class="mt-6 text-xl font-bold text-center hidden"></div>
             <div class="flex justify-center mt-6">
-                <button onclick="submitPracticeQuiz()" class="btn-primary">Periksa Jawaban</button>
+                <button onclick="submitPracticeQuiz()" class="btn-primary">Periksa Jawakan</button>
                 <button onclick="resetPracticeQuiz()" class="btn-secondary ml-4">Ulangi Latihan</button>
             </div>
         </section>
@@ -326,22 +428,22 @@
                 <div class="bg-blue-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-blue-800 mb-3">Pertumbuhan Populasi</h3>
                     <p class="mb-2">Populasi bakteri atau hewan seringkali tumbuh secara eksponensial. Jika populasi berlipat ganda setiap jam, maka setelah t jam, populasinya akan menjadi P<sub>0</sub> x 2<sup>t</sup>, di mana P<sub>0</sub> adalah populasi awal.</p>
-                    <p class="text-center mt-4">[Gambar Bakteri tumbuh secara eksponensial]</p>
+                    <p class="text-center mt-4"></p>
                 </div>
                 <div class="bg-green-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-green-800 mb-3">Bunga Majemuk</h3>
                     <p class="mb-2">Saat menabung di bank dengan bunga majemuk, jumlah uang Anda akan tumbuh secara eksponensial. Rumusnya adalah A = P(1 + r/n)<sup>nt</sup>.</p>
-                    <p class="text-center mt-4">[Gambar Uang tumbuh dengan bunga majemuk]</p>
+                    <p class="text-center mt-4"></p>
                 </div>
                 <div class="bg-purple-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-purple-800 mb-3">Ukuran File Digital</h3>
                     <p class="mb-2">Ukuran memori komputer (Kilobyte, Megabyte, Gigabyte) menggunakan basis 2. Misalnya, 1 Kilobyte = 2<sup>10</sup> byte.</p>
-                    <p class="text-center mt-4">[Gambar Satuan memori komputer]</p>
+                    <p class="text-center mt-4"></p>
                 </div>
                 <div class="bg-yellow-50 p-6 rounded-lg shadow-inner">
                     <h3 class="text-xl font-semibold text-yellow-800 mb-3">Skala Richter Gempa Bumi</h3>
                     <p class="mb-2">Skala Richter adalah skala logaritmik, yang berarti setiap kenaikan satu angka menunjukkan peningkatan kekuatan gempa bumi sebesar 10 kali lipat secara eksponensial.</p>
-                    <p class="text-center mt-4">[Gambar Skala Richter gempa bumi]</p>
+                    <p class="text-center mt-4"></p>
                 </div>
             </div>
         </section>
@@ -391,6 +493,20 @@
         // Function to scroll to a section
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Function to scroll to a section and close the mobile menu
+        function scrollToSectionAndCloseMenu(id) {
+            scrollToSection(id);
+            toggleMobileMenu(); // Close the menu after clicking a link
+        }
+
+        // Hamburger menu toggle logic
+        function toggleMobileMenu() {
+            const hamburgerIcon = document.getElementById('hamburgerIcon');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+            hamburgerIcon.classList.toggle('open');
+            mobileNavOverlay.classList.toggle('open');
         }
 
         // Custom Message Box Functions

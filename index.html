@@ -169,8 +169,6 @@
             <div id="intro-quiz" class="space-y-4">
                 <!-- Quiz questions will be dynamically loaded here -->
             </div>
-            <!-- Feedback box for intro quiz (no longer used for individual questions) -->
-            <!-- <div id="intro-feedback" class="feedback-box hidden"></div> -->
         </section>
 
         <!-- 2. Menghitung Nilai Pangkat (Halaman 23-28) -->
@@ -197,8 +195,6 @@
             <div id="calculate-quiz" class="space-y-4">
                 <!-- Quiz questions will be dynamically loaded here -->
             </div>
-            <!-- Feedback box for calculate quiz (no longer used for individual questions) -->
-            <!-- <div id="calculate-feedback" class="feedback-box hidden"></div> -->
         </section>
 
         <!-- 3. Sifat-Sifat Pangkat (Halaman 29-48) -->
@@ -224,8 +220,6 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 1:</h4>
                 <div id="property1-quiz" class="space-y-3"></div>
-                <!-- Feedback box for property1 quiz -->
-                <!-- <div id="property1-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 2: Pembagian Bilangan Berpangkat -->
@@ -246,8 +240,6 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 2:</h4>
                 <div id="property2-quiz" class="space-y-3"></div>
-                <!-- Feedback box for property2 quiz -->
-                <!-- <div id="property2-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 3: Perpangkatan Bilangan Berpangkat -->
@@ -268,8 +260,6 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 3:</h4>
                 <div id="property3-quiz" class="space-y-3"></div>
-                <!-- Feedback box for property3 quiz -->
-                <!-- <div id="property3-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 4: Perpangkatan dari Perkalian Dua Bilangan -->
@@ -290,8 +280,6 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 4:</h4>
                 <div id="property4-quiz" class="space-y-3"></div>
-                <!-- Feedback box for property4 quiz -->
-                <!-- <div id="property4-feedback" class="feedback-box hidden"></div> -->
             </div>
 
             <!-- Sifat 5: Perpangkatan dari Pembagian Dua Bilangan -->
@@ -312,8 +300,6 @@
                 </div>
                 <h4 class="text-xl font-semibold mb-3">Uji Pemahaman Sifat 5:</h4>
                 <div id="property5-quiz" class="space-y-3"></div>
-                <!-- Feedback box for property5 quiz -->
-                <!-- <div id="property5-feedback" class="feedback-box hidden"></div> -->
             </div>
         </section>
 
@@ -447,7 +433,8 @@
         ];
 
         // Modified loadQuiz to create unique IDs for each question's container and feedback
-        function loadQuiz(questions, containerId) { // Removed feedbackId as it's now per question
+        // Now uses radio buttons for consistency across all quizzes
+        function loadQuiz(questions, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // Clear previous questions
             questions.forEach((q, qIndex) => {
@@ -463,12 +450,14 @@
                 optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
 
                 q.options.forEach((option, oIndex) => {
-                    const optionButton = document.createElement('button');
-                    optionButton.classList.add('quiz-option', 'text-left');
-                    optionButton.innerHTML = option;
-                    // Pass unique IDs for the question container and its feedback box
-                    optionButton.onclick = () => checkAnswer(optionButton, q.answer, feedbackUniqueId, questionUniqueId);
-                    optionsDiv.appendChild(optionButton);
+                    const inputId = `${questionUniqueId}-option-${oIndex}`; // Unique ID for each radio input
+                    optionsDiv.innerHTML += `
+                        <label for="${inputId}" class="quiz-option flex items-center">
+                            <input type="radio" id="${inputId}" name="${questionUniqueId}-radio-group" value="${option}" class="mr-2"
+                                onclick="checkAnswer(this, '${q.answer}', '${feedbackUniqueId}', '${questionUniqueId}')">
+                            ${option}
+                        </label>
+                    `;
                 });
                 questionDiv.appendChild(optionsDiv);
 
@@ -483,27 +472,37 @@
         }
 
         // Modified checkAnswer to target specific question's options and feedback
-        function checkAnswer(selectedButton, correctAnswer, feedbackBoxId, questionContainerId) {
-            // Get all options within the specific question's container
-            const options = document.querySelectorAll(`#${questionContainerId} .quiz-option`);
-            options.forEach(btn => {
-                btn.classList.remove('correct', 'incorrect');
-                btn.disabled = true; // Disable all options for THIS specific question
+        // Now handles radio buttons and their parent labels for styling
+        function checkAnswer(selectedInput, correctAnswer, feedbackBoxId, questionContainerId) {
+            // Get all radio buttons for this specific question (using the 'name' attribute)
+            const radioGroupName = selectedInput.name;
+            const options = document.querySelectorAll(`input[name="${radioGroupName}"]`);
+
+            options.forEach(input => {
+                input.disabled = true; // Disable all radio buttons in this group
+                // Also remove highlight classes from their parent labels
+                const label = input.closest('label.quiz-option');
+                if (label) {
+                    label.classList.remove('correct', 'incorrect');
+                }
             });
 
             const feedbackBox = document.getElementById(feedbackBoxId);
             feedbackBox.classList.remove('hidden', 'feedback-correct', 'feedback-incorrect');
 
-            if (selectedButton.innerHTML === correctAnswer) {
-                selectedButton.classList.add('correct');
+            const selectedLabel = selectedInput.closest('label.quiz-option');
+
+            if (selectedInput.value === correctAnswer) {
+                if (selectedLabel) selectedLabel.classList.add('correct');
                 feedbackBox.classList.add('feedback-correct');
                 feedbackBox.innerHTML = 'Benar! 🎉';
             } else {
-                selectedButton.classList.add('incorrect');
-                // Find and highlight the correct answer within this question's options
-                options.forEach(btn => {
-                    if (btn.innerHTML === correctAnswer) {
-                        btn.classList.add('correct');
+                if (selectedLabel) selectedLabel.classList.add('incorrect');
+                // Find and highlight the correct answer
+                options.forEach(input => {
+                    if (input.value === correctAnswer) {
+                        const correctLabel = input.closest('label.quiz-option');
+                        if (correctLabel) correctLabel.classList.add('correct');
                     }
                 });
                 feedbackBox.classList.add('feedback-incorrect');
@@ -667,26 +666,38 @@
             }
         ];
 
+        // Modified loadPracticeQuiz to use the updated loadQuiz logic (radio buttons with immediate feedback)
         function loadPracticeQuiz() {
             const container = document.getElementById('practice-quiz-container');
             container.innerHTML = '';
             practiceQuizQuestions.forEach((q, qIndex) => {
                 const questionDiv = document.createElement('div');
+                const questionUniqueId = `question-practice-quiz-${qIndex}`;
+                const feedbackUniqueId = `feedback-practice-quiz-${qIndex}`;
+
+                questionDiv.id = questionUniqueId;
                 questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
                 questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
 
                 const optionsDiv = document.createElement('div');
                 optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
                 q.options.forEach((option, oIndex) => {
-                    const inputId = `practice-q${qIndex}-option${oIndex}`;
+                    const inputId = `${questionUniqueId}-option-${oIndex}`;
                     optionsDiv.innerHTML += `
                         <label for="${inputId}" class="quiz-option flex items-center">
-                            <input type="radio" id="${inputId}" name="practice-q${qIndex}" value="${option}" class="mr-2">
+                            <input type="radio" id="${inputId}" name="${questionUniqueId}-radio-group" value="${option}" class="mr-2"
+                                onclick="checkAnswer(this, '${q.answer}', '${feedbackUniqueId}', '${questionUniqueId}')">
                             ${option}
                         </label>
                     `;
                 });
                 questionDiv.appendChild(optionsDiv);
+
+                const feedbackBox = document.createElement('div');
+                feedbackBox.id = feedbackUniqueId;
+                feedbackBox.classList.add('feedback-box', 'hidden');
+                questionDiv.appendChild(feedbackBox);
+
                 container.appendChild(questionDiv);
             });
             document.getElementById('practice-score').classList.add('hidden');
@@ -695,7 +706,8 @@
         function submitPracticeQuiz() {
             let score = 0;
             practiceQuizQuestions.forEach((q, qIndex) => {
-                const selectedOption = document.querySelector(`input[name="practice-q${qIndex}"]:checked`);
+                // Ensure we get the value from the radio button group for this question
+                const selectedOption = document.querySelector(`input[name="question-practice-quiz-${qIndex}-radio-group"]:checked`);
                 if (selectedOption && selectedOption.value === q.answer) {
                     score++;
                 }
@@ -739,26 +751,38 @@
             }
         ];
 
+        // Modified loadFinalQuiz to use the updated loadQuiz logic (radio buttons with immediate feedback)
         function loadFinalQuiz() {
             const container = document.getElementById('final-quiz-container');
             container.innerHTML = '';
             finalQuizQuestions.forEach((q, qIndex) => {
                 const questionDiv = document.createElement('div');
+                const questionUniqueId = `question-final-quiz-${qIndex}`;
+                const feedbackUniqueId = `feedback-final-quiz-${qIndex}`;
+
+                questionDiv.id = questionUniqueId;
                 questionDiv.classList.add('mb-4', 'p-4', 'bg-white', 'rounded-lg', 'shadow-sm');
                 questionDiv.innerHTML = `<p class="font-semibold mb-3">${qIndex + 1}. ${q.question}</p>`;
 
                 const optionsDiv = document.createElement('div');
                 optionsDiv.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-3');
                 q.options.forEach((option, oIndex) => {
-                    const inputId = `final-q${qIndex}-option${oIndex}`;
+                    const inputId = `${questionUniqueId}-option-${oIndex}`;
                     optionsDiv.innerHTML += `
                         <label for="${inputId}" class="quiz-option flex items-center">
-                            <input type="radio" id="${inputId}" name="final-q${qIndex}" value="${option}" class="mr-2">
+                            <input type="radio" id="${inputId}" name="${questionUniqueId}-radio-group" value="${option}" class="mr-2"
+                                onclick="checkAnswer(this, '${q.answer}', '${feedbackUniqueId}', '${questionUniqueId}')">
                             ${option}
                         </label>
                     `;
                 });
                 questionDiv.appendChild(optionsDiv);
+
+                const feedbackBox = document.createElement('div');
+                feedbackBox.id = feedbackUniqueId;
+                feedbackBox.classList.add('feedback-box', 'hidden');
+                questionDiv.appendChild(feedbackBox);
+
                 container.appendChild(questionDiv);
             });
             document.getElementById('final-score').classList.add('hidden');
@@ -767,7 +791,8 @@
         function submitFinalQuiz() {
             let score = 0;
             finalQuizQuestions.forEach((q, qIndex) => {
-                const selectedOption = document.querySelector(`input[name="final-q${qIndex}"]:checked`);
+                // Ensure we get the value from the radio button group for this question
+                const selectedOption = document.querySelector(`input[name="question-final-quiz-${qIndex}-radio-group"]:checked`);
                 if (selectedOption && selectedOption.value === q.answer) {
                     score++;
                 }
@@ -784,7 +809,6 @@
 
         // Initialize quizzes on page load
         window.onload = function() {
-            // Updated loadQuiz calls to pass only containerId
             loadQuiz(introQuizQuestions, 'intro-quiz');
             loadQuiz(calculateQuizQuestions, 'calculate-quiz');
             loadPropertyQuiz('property1');
